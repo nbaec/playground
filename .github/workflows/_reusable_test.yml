@@ -1,0 +1,25 @@
+name: Reusable Test
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.print.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print values
+        id: print
+        shell: bash
+        run: |
+          echo "value=${{ inputs.environment }}" >> $GITHUB_OUTPUT

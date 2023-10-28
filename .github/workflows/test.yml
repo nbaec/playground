@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  schedule:
+    - cron: '* * * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  test:
+    uses: ./.github/workflows/_reusable_test.yml
+    with:
+      environment: ${{ matrix.environment }}
+    strategy:
+      matrix:
+        environment: ${{ fromJSON(format('["{0}"]', inputs.environment || '"development","staging","production"')) }}
+    secrets: inherit
