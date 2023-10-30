@@ -1,8 +1,8 @@
 name: Test
 
 on:
-  # schedule:
-  #   - cron: '* * * * *'
+  schedule:
+    - cron: '* * * * *'
   workflow_dispatch:
     inputs:
       environment:
@@ -28,9 +28,9 @@ jobs:
         shell: bash
         run: |
           if [ -z ${{ inputs.environment }} ]; then
-            echo "matrix=[\"${{ inputs.environment}}\"]" >> $GITHUB_OUTPUT
-          else
             echo "matrix=[\"development\", \"staging\", \"production\"]" >> $GITHUB_OUTPUT
+          else
+            echo "matrix=[\"${{ inputs.environment}}\"]" >> $GITHUB_OUTPUT
           fi
 
   test:
