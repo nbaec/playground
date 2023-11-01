@@ -1,8 +1,8 @@
 name: Test
 
 on:
-  # schedule:
-  #   - cron: '* * * * *'
+  schedule:
+    - cron: '* * * * *'
   workflow_dispatch:
     inputs:
       environment:
@@ -15,30 +15,11 @@ on:
           - production
 
 jobs:
-  set-matrix:
-    name: Set Matrix
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - id: set-matrix
-        shell: bash
-        run: |
-          if [ -z ${{ inputs.environment }} ]; then
-            echo "matrix=[\"development\", \"staging\", \"production\"]" >> $GITHUB_OUTPUT
-          else
-            echo "matrix=[\"${{ inputs.environment}}\"]" >> $GITHUB_OUTPUT
-          fi
-
   test:
     uses: ./.github/workflows/_reusable_test.yml
-    needs: set-matrix
     with:
       environment: ${{ matrix.environment }}
     strategy:
       matrix:
-        environment: ${{ fromJSON(needs.set-matrix.outputs.matrix) }}
+        environment: ${{ inputs.environment && fromJSON(format('[{0}]', inputs.environment || '"development","staging"')) }}
     secrets: inherit
