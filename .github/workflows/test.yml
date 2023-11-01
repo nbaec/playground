@@ -6,9 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Environment in double quotes, e.g. "development"
+        description: 'Environment'
         required: true
-        type: string
+        type: choice
+        options:
+          - "development"
+          - "staging"
+          - "production"
 
 jobs:
   test:
