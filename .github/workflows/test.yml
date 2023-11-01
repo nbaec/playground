@@ -6,13 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment'
+        description: Environment in double quotes, e.g. "development"
         required: true
-        type: choice
-        options:
-          - "development"
-          - "staging"
-          - "production"
+        type: string
 
 jobs:
   test:
@@ -21,5 +17,5 @@ jobs:
       environment: ${{ matrix.environment }}
     strategy:
       matrix:
-        environment: ${{ inputs.environment && fromJSON(format('["{0}"]', inputs.environment)) || '[development, staging, production]' }}
+        environment: ${{ fromJSON(format('[{0}]', inputs.environment || '"development", "staging", "production"' )) }}
     secrets: inherit
